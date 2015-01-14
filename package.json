@@ -1,0 +1,25 @@
+{
+  "name": "ng-templatecache",
+  "version": "0.1.0",
+  "description": "Convert angular templates into $templateCache entries",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "nodeunit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/statianzo/ng-templatecache.git"
+  },
+  "keywords": [
+    "angular",
+    "ng",
+    "template",
+    "templatecache"
+  ],
+  "author": "Jason Staten",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/statianzo/ng-templatecache/issues"
+  },
+  "homepage": "https://github.com/statianzo/ng-templatecache"
+}
