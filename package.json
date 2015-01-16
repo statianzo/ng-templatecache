@@ -2,9 +2,11 @@
   "name": "ng-templatecache",
   "version": "0.1.0",
   "description": "Convert angular templates into $templateCache entries",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "nodeunit"
+    "convert": "6to5 --modules common src --out-dir lib",
+    "prepublish": "npm run convert",
+    "test": "6to5-node node_modules/.bin/nodeunit"
   },
   "repository": {
     "type": "git",
@@ -21,5 +23,12 @@
   "bugs": {
     "url": "https://github.com/statianzo/ng-templatecache/issues"
   },
-  "homepage": "https://github.com/statianzo/ng-templatecache"
+  "homepage": "https://github.com/statianzo/ng-templatecache",
+  "devDependencies": {
+    "6to5": "^2.12.3",
+    "nodeunit": "^0.9.0"
+  },
+  "dependencies": {
+    "js-string-escape": "^1.0.0"
+  }
 }
