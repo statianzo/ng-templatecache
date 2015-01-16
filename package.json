@@ -6,7 +6,7 @@
   "scripts": {
     "convert": "6to5 --modules common src --out-dir lib",
     "prepublish": "npm run convert",
-    "test": "6to5-node node_modules/.bin/nodeunit"
+    "test": "6to5-node node_modules/.bin/nodeunit --reporter skip_passed"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "nodeunit": "^0.9.0"
   },
   "dependencies": {
-    "js-string-escape": "^1.0.0"
+    "js-string-escape": "^1.0.0",
+    "lodash": "^2.4.1"
   }
 }
