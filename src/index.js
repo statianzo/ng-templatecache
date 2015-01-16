@@ -15,7 +15,7 @@ const defaultOpts = {
 };
 
 function wrapWithModule(src, module, standalone) {
-  var secondArg = standalone ? ',[]' : '';
+  var secondArg = standalone ? ', []' : '';
   return [
     moduleOpen(module, secondArg),
     src,
