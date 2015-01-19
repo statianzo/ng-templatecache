@@ -51,7 +51,7 @@ export const withOptions = {
 
   standalone(test) {
     const result = templatecache({entries: [{src: this.template, srcPath: 'a/b'}], standalone: true});
-    test.ok(result.includes('angular.module("templates", [])'));
+    test.ok(result.includes('angular.module("templates", [])'), "missing standalone module");
     test.done();
   },
 

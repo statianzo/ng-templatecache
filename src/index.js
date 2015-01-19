@@ -1,6 +1,6 @@
 import escape from 'js-string-escape';
 import {format} from 'util';
-import {extend, compose} from 'lodash';
+import {mixin, compose, join, apply, append, identity} from 'ramda';
 
 const moduleOpenFormat = 'angular.module("%s"%s).run(["$templateCache", function($templateCache) {';
 const entryFormat = '$templateCache.put("%s", "%s");';
@@ -12,35 +12,31 @@ const defaultOpts = {
   standalone: false
 };
 
-function join(sep) {
-  return (lines) => lines.join(sep);
+function openModule(module, standalone) {
+  const open = format(moduleOpenFormat, module, standalone ? ', []' : '');
+  return module ? append(open) : identity;
 }
 
-function wrapInModule(module, standalone) {
-  const open = format(moduleOpenFormat, module, standalone ? ', []' : '');
+function closeModule(module) {
   const close = format(moduleCloseFormat);
-  return module ?
-    (lines) => [].concat(open, lines, close) :
-    (lines) => lines;
+  return module ? append(close) : identity;
 }
 
 function appendEntry(entry) {
   const {srcPath, src} = entry;
   const line = format(entryFormat, srcPath, escape(src));
-  return function (lines) {
-    lines.push(line);
-    return lines;
-  };
+  return append(line);
 }
 
 export default function render(opts) {
-  const {entries, module, standalone} = extend({}, defaultOpts, opts);
+  const {entries, module, standalone} = mixin(defaultOpts, opts);
   const entryOps = entries.map(appendEntry);
   const ops = [].concat(
     join('\n'),
-    wrapInModule(module, standalone),
-    entryOps
+    closeModule(module, standalone),
+    entryOps,
+    openModule(module, standalone)
   );
 
-  return compose.apply(null, ops)([]);
+  return apply(compose, ops)([]);
 }
