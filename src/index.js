@@ -1,36 +1,46 @@
 import escape from 'js-string-escape';
 import {format} from 'util';
-import {extend} from 'lodash';
+import {extend, compose} from 'lodash';
 
 const moduleOpenFormat = 'angular.module("%s"%s).run(["$templateCache", function($templateCache) {';
 const entryFormat = '$templateCache.put("%s", "%s");';
 const moduleCloseFormat = '}]);';
 
-const moduleOpen = format.bind(null, moduleOpenFormat);
-const entry = format.bind(null, entryFormat);
-const moduleClose = format.bind(null, moduleCloseFormat);
 const defaultOpts = {
+  entries: [],
   module: 'templates',
   standalone: false
 };
 
-function wrapWithModule(src, module, standalone) {
-  var secondArg = standalone ? ', []' : '';
-  return [
-    moduleOpen(module, secondArg),
-    src,
-    moduleClose()
-  ].join('\n');
+function join(sep) {
+  return (lines) => lines.join(sep);
+}
+
+function wrapInModule(module, standalone) {
+  const open = format(moduleOpenFormat, module, standalone ? ', []' : '');
+  const close = format(moduleCloseFormat);
+  return module ?
+    (lines) => [].concat(open, lines, close) :
+    (lines) => lines;
+}
+
+function appendEntry(entry) {
+  const {srcPath, src} = entry;
+  const line = format(entryFormat, srcPath, escape(src));
+  return function (lines) {
+    lines.push(line);
+    return lines;
+  };
 }
 
 export default function render(opts) {
-  const {src, srcPath, module, standalone} = extend({}, defaultOpts, opts);
-  var expression = entry(srcPath, escape(src));
+  const {entries, module, standalone} = extend({}, defaultOpts, opts);
+  const entryOps = entries.map(appendEntry);
+  const ops = [].concat(
+    join('\n'),
+    wrapInModule(module, standalone),
+    entryOps
+  );
 
-  if (module) {
-    return wrapWithModule(expression, module, standalone);
-  }
-  else {
-    return expression;
-  }
+  return compose.apply(null, ops)([]);
 }
