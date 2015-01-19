@@ -1,6 +1,6 @@
 {
   "name": "ng-templatecache",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Convert angular templates into $templateCache entries",
   "main": "lib/index.js",
   "scripts": {
