@@ -23,8 +23,8 @@ function closeModule(module) {
 }
 
 function appendEntry(entry) {
-  const {srcPath, src} = entry;
-  const line = format(entryFormat, srcPath, escape(src));
+  const {path, content} = entry;
+  const line = format(entryFormat, path, escape(content));
   return append(line);
 }
 
