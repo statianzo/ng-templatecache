@@ -1,6 +1,7 @@
 import escape from 'js-string-escape';
 import {format} from 'util';
-import {mixin, compose, join, apply, append, identity} from 'ramda';
+import {map, mixin, compose, join, apply, append, identity, lPartial} from 'ramda';
+import url from 'url';
 
 const moduleOpenFormat = 'angular.module("%s"%s).run(["$templateCache", function($templateCache) {';
 const entryFormat = '$templateCache.put("%s", "%s");';
@@ -9,8 +10,11 @@ const moduleCloseFormat = '}]);';
 const defaultOpts = {
   entries: [],
   module: 'templates',
-  standalone: false
+  standalone: false,
+  prefix: ''
 };
+
+const normalizeUrl = compose(url.format, url.parse);
 
 function openModule(module, standalone) {
   const open = format(moduleOpenFormat, module, standalone ? ', []' : '');
@@ -22,15 +26,16 @@ function closeModule(module) {
   return module ? append(close) : identity;
 }
 
-function appendEntry(entry) {
+function appendEntry(prefix, entry) {
   const {path, content} = entry;
-  const line = format(entryFormat, path, escape(content));
+  const prefixedPath = normalizeUrl(prefix + path);
+  const line = format(entryFormat, prefixedPath, escape(content));
   return append(line);
 }
 
 export default function render(opts) {
-  const {entries, module, standalone} = mixin(defaultOpts, opts);
-  const entryOps = entries.map(appendEntry);
+  const {entries, module, standalone, prefix} = mixin(defaultOpts, opts);
+  const entryOps = map(lPartial(appendEntry, prefix), entries);
   const ops = [].concat(
     join('\n'),
     closeModule(module, standalone),

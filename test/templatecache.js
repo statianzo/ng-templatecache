@@ -59,5 +59,17 @@ export const withOptions = {
     const result = templatecache({entries: [{content: this.template, path: 'a/b'}], module: false});
     test.ok(!result.includes('angular.module'));
     test.done();
-  }
+  },
+
+  prefix(test) {
+    const result = templatecache({entries: [{content: 'xxx', path: 'a/b'}], prefix: '/slog/', module: false});
+    test.equal(result, '$templateCache.put("/slog/a/b", "xxx");');
+    test.done();
+  },
+
+  windowsPaths(test) {
+    const result = templatecache({entries: [{content: 'xxx', path: 'a\\b'}], prefix: '\\slog\\', module: false});
+    test.equal(result, '$templateCache.put("/slog/a/b", "xxx");');
+    test.done();
+  },
 };

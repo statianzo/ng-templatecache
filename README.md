@@ -29,6 +29,7 @@ angular.module('templates').run(['$templateCache', function($templateCache) {
 
 ## Options
 
-- `module` (default: `"templates"`) sets the generate module name. `false` means don't create a module
-- `standalone` (default: `false`) if `true`, the module will be created as `angular.module('xxx', [])`
 - `entries` The list of entries to be added to the cache, each containing `path` and `content`
+- `module` (default: `"templates"`) sets the generate module name. `false` means don't create a module
+- `prefix` (default: `''`) Prefix to add to template paths
+- `standalone` (default: `false`) if `true`, the module will be created as `angular.module('xxx', [])`
