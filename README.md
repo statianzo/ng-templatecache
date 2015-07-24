@@ -11,7 +11,7 @@ npm install --save ng-templatecache
 ## Usage
 
 ```js
-var templatecache = require('templatecache');
+var templatecache = require('ng-templatecache');
 var myTemplate = '<div>Hello, {{firstName}}</div>';
 templatecache.render({
   entries: [{content: myTemplate, path: '/templates/greet.html'}],
